@@ -43,15 +43,25 @@ const fakeEventsPL = [
   { id: '2', name: 'Muzeum Vasa w Sztokholmie', patch_img: 'img/events/event3_1.jpg', patch_img2: 'img/events/event3_2.jpg', patch_img3: 'img/events/event3_3.jpg', description: 'Test desc 2', price: '30' },
 ];
 
+let submitAPI = {
+  email: "",
+  number_of_tickets: null,
+  time_slot: null
+};
+
+
+
 app = new express();
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(cors());
 
+
+//GET PART 
+
 app.get('/',(req,res)=> { 
   res.send(ads_json)
 })
-
 
 app.get("/Events/EN",(req,res) => {
   res.send(fakeEventsEN)
@@ -63,6 +73,22 @@ app.get("/Events/PL",(req,res) => {
 
 app.get("/Events/IT",(req,res) => {
   res.send(fakeEventsIT)
+ 
 })
+
+
+//POST PART 
+
+app.post('/Events/IT', (req, res) => {
+  fakeEventsIT = req.is("JSON"); 
+  res.sendStatus(200);
+});
+
+app.post('/Submit', (req, res) => {
+  submitAPI = req.body;
+  console.log(req.body)
+  res.sendStatus(200);
+});
+
 
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));

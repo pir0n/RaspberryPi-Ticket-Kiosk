@@ -16,14 +16,20 @@ import axios from 'axios';
 const GetTicketButton = (props) => {
   const price = props.event.price;
   const language = props.language;
+  
   //let timeslots = props.
   const [modalShowPaid, setModalShowPaid] = React.useState(false);
+
+  
+
+
+
   if (language === "uk") {
     if (price === "0") {
       return <>
         <Button variant="primary" className="btn btn-success mr-4 " onClick={() => setModalShowPaid(true)}>Get tickets for free</Button>
 
-        <MydModalWithGridPaid show={modalShowPaid} lang={language} onHide={() => setModalShowPaid(false)} />
+        <MydModalWithGridPaid show={modalShowPaid} lang={language}  onHide={() => setModalShowPaid(false)} />
 
 
       </>
@@ -58,29 +64,25 @@ const GetTicketButton = (props) => {
   }
 }
 
+ 
 
 function MydModalWithGridPaid(props) {
   const lang = props.lang;
   const price = props.price;
   const timeslots = props.timeslots;
   const maxavailabletickets = props.maxavailableticket;
-  const [email, setEmail] = useState("test");
-  const [number_of_tickets, setNumberOfTickets] = useState("test");
-  const [time_slot, setTimeSlot] = useState("test");
   
-  //dodac tutaj funcke ktora to ogranie 
-  const submitAPI = {
-    email: {email},
-    number_of_tickets: {number_of_tickets},
-    time_slot: {time_slot}
+  const [submitAPI, setSubmitAPI] = useState([{email: " ",time_slot: " ",number_of_tickets: " "}])
+  function UpdateSubmit () {     
+     setSubmitAPI([{email: "test ",time_slot: "test",number_of_tickets: "tests "}]);
   }
   useEffect( () => {
     const fetchData = async () => {
-      const response = await axios('http://localhost:3001/Submit', submitAPI);
-    
+      const result = await axios.post('http://localhost:3001/Submit',submitAPI );
     };
     fetchData();
-  },[]); 
+  },[submitAPI]);
+  
   
 
 
@@ -139,14 +141,15 @@ function MydModalWithGridPaid(props) {
           </Form.Group>
 
         </Form>
+        
         <Modal.Footer>
           {lang === "uk" && <Button variant="danger" className="btn btn-danger mt-2" onClick={props.onHide}>Close</Button>}
           {lang === "pl" && <Button variant="danger" className="btn btn-danger mt-2" onClick={props.onHide}>Zamknij</Button>}
           {lang === "it" && <Button variant="danger" className="btn btn-danger mt-2" onClick={props.onHide}>Chiudere</Button>}
-
-          {lang === "uk" && <Button variant="primary" className="btn btn-primary mt-2" onClick={props.onHide}>Submit</Button>}
-          {lang === "pl" && <Button variant="primary" className="btn btn-primary mt-2" onClick={props.onHide && SendSubmit}>Zatwierdź</Button>}
-          {lang === "it" && <Button variant="primary" className="btn btn-primary mt-2" onClick={props.onHide && SendSubmit}>Invia</Button>}
+         
+          {lang === "uk" && <Button variant="primary" className="btn btn-primary mt-2" onClick={() => UpdateSubmit()}>Submit</Button>}
+          {lang === "pl" && <Button variant="primary" className="btn btn-primary mt-2" onClick={props.onHide}>Zatwierdź</Button>}
+          {lang === "it" && <Button variant="primary" className="btn btn-primary mt-2" onClick={props.onHide}>Invia</Button>}
 
         </Modal.Footer></Container>
     </Modal>
@@ -190,6 +193,7 @@ const EventItem = (props) => {
   let { event } = props;
   let { language } = props;
   const [modalShow, setModalShow] = React.useState(false);
+  
   
 
 
