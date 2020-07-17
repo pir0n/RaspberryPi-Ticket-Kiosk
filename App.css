@@ -1,0 +1,22 @@
+.header {
+  text-align: center;
+}
+
+.lang{
+  flex-direction: row
+}
+
+.box {
+  display: flex;
+}
+.container {
+  display: flex; /* or inline-flex */
+  ;
+  flex-wrap: wrap;
+}
+
+.img {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+}

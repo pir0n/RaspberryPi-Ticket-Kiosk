@@ -51,7 +51,6 @@ const App = () => {
   const [EventsIT,setEventsIT] = useState(fakeEventsIT);
   const [testobj,setTestobj] = useState([{greeting: " "}]);
 
-  const [data, setData] = useState({ hits: [] });
 
 
   useEffect( () => {
@@ -89,6 +88,9 @@ const App = () => {
     };
     fetchData();
   },[]);
+
+  
+
 
 
   function updatestateIT() {
