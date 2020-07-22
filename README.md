@@ -20,3 +20,5 @@ qr_decoder.py - Handles basic QR decoding (for tickets) in future will be update
 
 ![TotemTestV2](https://github.com/pir0n/raspi_raw/blob/master/totem_test_V2.gif)
 
+
+![RaspTotem](https://github.com/pir0n/raspi_raw/blob/master/raspberry.jpg)
