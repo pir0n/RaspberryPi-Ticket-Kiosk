@@ -84,7 +84,7 @@ app.post('/Events/IT', (req, res) => {
   res.sendStatus(200);
 });
 
-app.post('/Submit', (req, res) => {
+app.put('/Submit', (req, res) => {
   submitAPI = req.body;
   console.log(req.body)
   res.sendStatus(200);
