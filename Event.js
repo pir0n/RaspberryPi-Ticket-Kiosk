@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
@@ -16,11 +16,9 @@ import axios from 'axios';
 const GetTicketButton = (props) => {
   const price = props.event.price;
   const language = props.language;
-  
-  //let timeslots = props.
   const [modalShowPaid, setModalShowPaid] = React.useState(false);
 
-  
+
 
 
 
@@ -29,7 +27,7 @@ const GetTicketButton = (props) => {
       return <>
         <Button variant="primary" className="btn btn-success mr-4 " onClick={() => setModalShowPaid(true)}>Get tickets for free</Button>
 
-        <MydModalWithGridPaid show={modalShowPaid} lang={language}  onHide={() => setModalShowPaid(false)} />
+        <MydModalWithGridPaid show={modalShowPaid} lang={language} onHide={() => setModalShowPaid(false)} />
 
 
       </>
@@ -64,26 +62,67 @@ const GetTicketButton = (props) => {
   }
 }
 
- 
+
 
 function MydModalWithGridPaid(props) {
   const lang = props.lang;
   const price = props.price;
   const timeslots = props.timeslots;
   const maxavailabletickets = props.maxavailableticket;
-  
-  const [submitAPI, setSubmitAPI] = useState([{email: " ",time_slot: " ",number_of_tickets: " "}])
-  function UpdateSubmit () {     
-     setSubmitAPI([{email: "test ",time_slot: "test",number_of_tickets: "tests "}]);
+
+  const [submitAPI, setSubmitAPI] = useState([{ email: " ", time_slot: " ", number_of_tickets: " " }])
+
+//PUT METHOD PART 
+  function UpdateSubmit() {
+    setSubmitAPI({ email: "test ", time_slot: "test", number_of_tickets: "tests " });
   }
-  useEffect( () => {
+  useEffect(() => {
     const fetchData = async () => {
-      const result = await axios.post('http://localhost:3001/Submit',submitAPI );
+      //const json_submitAPI = await JSON.stringify(submitAPI)
+      const result = await axios.put('http://localhost:3001/Submit', submitAPI);
     };
     fetchData();
-  },[submitAPI]);
-  
-  
+  }, [submitAPI]);
+
+  //keyboard const PART 
+  const [input, setInput] = useState("");
+  const [layout, setLayout] = useState("default");
+  const keyboard = useRef();
+  const [showkeyboard, setShowkeyboard] = useState(false);
+
+
+  const onChange = input => {
+    setInput(input);
+
+    console.log("Input changed", input);
+  };
+
+  const handleShift = () => {
+    const newLayoutName = layout === "default" ? "shift" : "default";
+    setLayout(newLayoutName);
+  };
+
+  const onKeyPress = button => {
+    console.log("Button pressed", button);
+    if (button === "{enter}") {
+      setShowkeyboard(false)
+    }
+    /**
+     * If you want to handle the shift and caps lock buttons
+     */
+    if (button === "{shift}" || button === "{lock}") handleShift();
+  };
+
+  const onChangeInput = event => {
+    const input = event.target.value;
+    setInput(input);
+    keyboard.current.setInput(input);
+  };
+
+  const onClickshow = () => {
+    setShowkeyboard(true)
+
+  }
 
 
   if (price === "0") {
@@ -103,10 +142,19 @@ function MydModalWithGridPaid(props) {
 
         <Form>
           <Form.Group className="pt-2 mt=4" controlId="exampleForm.ControlInput1">
-            <Form.Label>Email address </Form.Label>
-            <Form.Control type="email" placeholder="name@example.com" />
+            <Form.Label>Email </Form.Label>
+            <Form.Control value={input} inputRef={r => (keyboard.current = r)} type="email" placeholder="name@example.com" onClick={() => onClickshow()} />
+            {showkeyboard === true && <Keyboard
+              keyboardRef={r => (keyboard.current = r)}
+              layoutName={layout}
+              onChange={onChange}
+              onKeyPress={onKeyPress}
+            />}
+
+
+
             <Form.Text className="text-muted">
-      We'll never share your email with anyone else.
+              We'll never share your email with anyone else.
     </Form.Text>
           </Form.Group>
           <Form.Group controlId="exampleForm.ControlSelect1">
@@ -117,7 +165,7 @@ function MydModalWithGridPaid(props) {
 
 
             <Form.Control as="select">
-        
+
               <option>1</option>
               <option>2</option>
               <option>3</option>
@@ -141,12 +189,12 @@ function MydModalWithGridPaid(props) {
           </Form.Group>
 
         </Form>
-        
+
         <Modal.Footer>
           {lang === "uk" && <Button variant="danger" className="btn btn-danger mt-2" onClick={props.onHide}>Close</Button>}
           {lang === "pl" && <Button variant="danger" className="btn btn-danger mt-2" onClick={props.onHide}>Zamknij</Button>}
           {lang === "it" && <Button variant="danger" className="btn btn-danger mt-2" onClick={props.onHide}>Chiudere</Button>}
-         
+
           {lang === "uk" && <Button variant="primary" className="btn btn-primary mt-2" onClick={() => UpdateSubmit()}>Submit</Button>}
           {lang === "pl" && <Button variant="primary" className="btn btn-primary mt-2" onClick={props.onHide}>Zatwierdź</Button>}
           {lang === "it" && <Button variant="primary" className="btn btn-primary mt-2" onClick={props.onHide}>Invia</Button>}
@@ -193,8 +241,8 @@ const EventItem = (props) => {
   let { event } = props;
   let { language } = props;
   const [modalShow, setModalShow] = React.useState(false);
-  
-  
+
+
 
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useLayoutEffect } from "react";
 import './App.css';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -6,39 +6,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "react-bootstrap/Navbar";
 import { RenderBox } from "./MainContainer";
 import axios from 'axios';
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Col from "react-bootstrap/Col";
 
 //"homepage": "http://pir0n.github.io/RaspiKiosk",
-const fakeEventsEN = [
-  { id: '0', name: 'Fire and Forget at KW Institute for Contemporary Art', patch_img: 'img/events/event1_1.jpg', patch_img2: 'img/events/event1_2.jpg', patch_img3: 'img/events/event1_3.jpg', description: 'Test desc 0', price: '0' },
-  { id: '1', name: 'The Natural History Museum', patch_img: 'img/events/event2_1.jpg', patch_img2: 'img/events/event2_2.jpg', patch_img3: 'img/events/event2_3.jpg', description: 'Test desc 1', price: '0' },
-  { id: '2', name: 'The Vasa Museum in Stockholm', patch_img: 'img/events/event3_1.jpg', patch_img2: 'img/events/event3_2.jpg', patch_img3: 'img/events/event3_3.jpg', description: 'Test desc 2', price: '322' },
-  { id: '0', name: 'Fire and Forget at KW Institute for Contemporary Art', patch_img: 'img/events/event1_1.jpg', patch_img2: 'img/events/event1_2.jpg', patch_img3: 'img/events/event1_3.jpg', description: 'Test desc 0', price: '233' },
-  { id: '1', name: 'The Natural History Museum', patch_img: 'img/events/event2_1.jpg', patch_img2: 'img/events/event2_2.jpg', patch_img3: 'img/events/event2_3.jpg', description: 'Test desc 1', price: '200' },
-  { id: '2', name: 'The Vasa Museum in Stockholm', patch_img: 'img/events/event3_1.jpg', patch_img2: 'img/events/event3_2.jpg', patch_img3: 'img/events/event3_3.jpg', description: 'Test desc 2', price: '30' },
-];
+const fakeEventsEN = [];
 
-const fakeEventsPL = [
-  { id: '0', name: 'Pożar i zapomnij w KW Institute for Contemporary Art', patch_img: 'img/events/event1_1.jpg', patch_img2: 'img/events/event1_2.jpg', patch_img3: 'img/events/event1_3.jpg', description: 'Test desc 0', price: '0' },
-  { id: '1', name: 'Muzeum Historii Naturalnej', patch_img: 'img/events/event2_1.jpg', patch_img2: 'img/events/event2_2.jpg', patch_img3: 'img/events/event2_3.jpg', description: 'Test desc 1', price: '0' },
-  { id: '2', name: 'Muzeum Vasa w Sztokholmie', patch_img: 'img/events/event3_1.jpg', patch_img2: 'img/events/event3_2.jpg', patch_img3: 'img/events/event3_3.jpg', description: 'Test desc 2', price: '322' },
-  { id: '0', name: 'Pożar i zapomnij w KW Institute for Contemporary Art', patch_img: 'img/events/event1_1.jpg', patch_img2: 'img/events/event1_2.jpg', patch_img3: 'img/events/event1_3.jpg', description: 'Test desc 0', price: '233' },
-  { id: '1', name: 'Muzeum Historii Naturalnej', patch_img: 'img/events/event2_1.jpg', patch_img2: 'img/events/event2_2.jpg', patch_img3: 'img/events/event2_3.jpg', description: 'Test desc 1', price: '200' },
-  { id: '2', name: 'Muzeum Vasa w Sztokholmie', patch_img: 'img/events/event3_1.jpg', patch_img2: 'img/events/event3_2.jpg', patch_img3: 'img/events/event3_3.jpg', description: 'Test desc 2', price: '30' },
-];
+const fakeEventsPL = [];
 
-const fakeEventsIT = [
-  { id: '0', name: 'Fuoco e Dimentica al KW Institute for Contemporary Art', patch_img: 'img/events/event1_1.jpg', patch_img2: 'img/events/event1_2.jpg', patch_img3: 'img/events/event1_3.jpg', description: 'Test desc 0', price: '0' },
-  { id: '1', name: 'Il Museo di storia naturale', patch_img: 'img/events/event2_1.jpg', patch_img2: 'img/events/event2_2.jpg', patch_img3: 'img/events/event2_3.jpg', description: 'Test desc 1', price: '0' },
-  { id: '2', name: 'Il Museo Vasa di Stoccolma', patch_img: 'img/events/event3_1.jpg', patch_img2: 'img/events/event3_2.jpg', patch_img3: 'img/events/event3_3.jpg', description: 'Test desc 2', price: '322' },
-  { id: '0', name: 'Fuoco e Dimentica al KW Institute for Contemporary Art', patch_img: 'img/events/event1_1.jpg', patch_img2: 'img/events/event1_2.jpg', patch_img3: 'img/events/event1_3.jpg', description: 'Test desc 0', price: '233' },
-  { id: '1', name: 'Il Museo di storia naturale', patch_img: 'img/events/event2_1.jpg', patch_img2: 'img/events/event2_2.jpg', patch_img3: 'img/events/event2_3.jpg', description: 'Test desc 1', price: '200' },
-  { id: '2', name: 'Il Museo Vasa di Stoccolma', patch_img: 'img/events/event3_1.jpg', patch_img2: 'img/events/event3_2.jpg', patch_img3: 'img/events/event3_3.jpg', description: 'Test desc 2', price: '30' },
-];
-/*
-function EventAPI(){
-  const [allEvents, add]
-s
-} */
+const fakeEventsIT = [];
+
 
 
 // MAIN FUNCTION
@@ -50,30 +28,66 @@ const App = () => {
   const [EventsPL,setEventsPL] = useState(fakeEventsPL);
   const [EventsIT,setEventsIT] = useState(fakeEventsIT);
   const [testobj,setTestobj] = useState([{greeting: " "}]);
+  const [modalShow, setModalShow] = useState(true);
 
 
+  function Initmodal(props) {
+    function handleIT(){
+      updatestateIT();
+      setModalShow(false)
+    }
+    function handleUK(){
+      updatestateUK();
+      setModalShow(false)
+    }
+    function handlePL(){
+      updatestatePL();
+      setModalShow(false)
+    }
+    return (
+      <Modal
+        
+        size="lg"
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        aria-labelledby="contained-modal-title-vcenter"
+        backdrop="static"
+        centered           
+      >
+        
+        <Modal.Title id="example-modal-sizes-title-vcenter" className="blockquote text-center mr-2"> <h1>Hello! Ciao! Cześć!</h1> </Modal.Title>   
+         <Modal.Body>  <Row  className="justify-content-md-center "  >
+      <div className="btn-group btn-block " xs={8} sm={8} md={5} lg={4} xl={3}> 
+       <Col > <Button variant="dark"  className="btn btn-default btn-block " onClick={() => handleUK()}> <h1 >Click on me!</h1></Button></Col> 
+       <Col><Button variant="dark" className="btn btn-default btn-block " onClick={() => handleIT()}><h1> Clicca su di me!</h1></Button></Col> 
+       <Col>  <Button variant="dark" className="btn btn-default btn-block" onClick={() => handlePL()}><h1> Kliknij na mnie!</h1></Button></Col> 
+        </div>   </Row> 
+       </Modal.Body>
+      </Modal>
+      );
+  }
+  
+  
+//variables for addreses for GET/PUT/POST request not hardcoded! 
 
-  useEffect( () => {
-    const fetchData = async () => {
-      const result = await axios('http://localhost:3001/', );
-      
-      setTestobj(result.data)
-    };
-    fetchData();
-  },[]);
+//Device catalog url:
+const [deviceCatalogUrl,setDeviceCatalogUrl] = useState(""); 
+//Backend url: 
+const [backendUrl,setBackendUrl] = useState("http://localhost:3001/");
+
   
   useEffect( () => {
     const fetchData = async () => {
-      const result = await axios('http://localhost:3001/Events/EN', );
+      const result = await axios(backendUrl+"Events/EN", );
       
       setEventsEN(result.data)
     };
-    fetchData();
+    fetchData(EventsEN);
   },[]);
 
   useEffect( () => {
     const fetchData = async () => {
-      const result = await axios('http://localhost:3001/Events/PL', );
+      const result = await axios(backendUrl +'Events/PL', );
       
       setEventsPL(result.data)
     };
@@ -82,15 +96,14 @@ const App = () => {
 
   useEffect( () => {
     const fetchData = async () => {
-      const result = await axios('http://localhost:3001/Events/IT', );
+      const result = await axios(backendUrl+'Events/IT', );
       
       setEventsIT(result.data)
     };
     fetchData();
   },[]);
 
-  
-
+ 
 
 
   function updatestateIT() {
@@ -118,28 +131,33 @@ const App = () => {
   
 
   return (
-    <div className="main">
 
-      <Container fluid>
+    
+    <div className="main container3" >
+    <Container fluid   ><Row className=" align-items-start "> 
+<Navbar  bg="light" expand="true" variant="light" >
+          
+          <Navbar.Brand href="#home">{lang} </Navbar.Brand>
 
+          
+          <Col float="left">  <img src="img/icons_language/italy.png" className="img  "   alt="Avatar" onClick={() => updatestateIT()} /> </Col> 
+          <Col float="left">  <img src="img/icons_language/uk.png" className="img " alt="Avatar" onClick={() => updatestateUK()} /> </Col> 
+          <Col float="left">   <img src="img/icons_language/poland.png" className="img " alt="Avatar" onClick={() => updatestatePL()} /> </Col> 
+          
+        </Navbar>
+         </Row>
+        </Container>
+      <Container fluid  >
+      
+        <Row expand="lg">
+           </Row>  
 
+      
         <Row>
-          <Navbar bg="light" expand="lg" variant="light" >
-
-            <Navbar.Brand href="#home">{lang}</Navbar.Brand>
-
-
-            <img src="img/icons_language/italy.png" className="img mr-4" alt="Avatar" onClick={() => updatestateIT()} />
-            <img src="img/icons_language/uk.png" className="img mr-4" alt="Avatar" onClick={() => updatestateUK()} />
-            <img src="img/icons_language/poland.png" className="img mr-4" alt="Avatar" onClick={() => updatestatePL()} />
-            testowe zapytanie exprees {testobj.greeting} plus
-
-          </Navbar> </Row>
-        <Row>
+        <Initmodal show={modalShow} onHide={() => setModalShow(false)} />
           <RenderBox events={langobject} language={language}>  </RenderBox>
 
         </Row>
-
 
       </Container>
 
